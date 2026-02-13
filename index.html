@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💝 Walentynki 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 90%;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #ff1744;
+            margin-bottom: 50px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .heart {
+            font-size: 5em;
+            margin: 20px 0;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            10%, 30% {
+                transform: scale(1.2);
+            }
+            20%, 40% {
+                transform: scale(1);
+            }
+        }
+
+        .buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        button {
+            font-size: 1.5em;
+            padding: 20px 50px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #4caf50, #81c784);
+            color: white;
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #f44336, #e57373);
+            color: white;
+        }
+
+        /* Fullscreen gif overlay */
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .fullscreen-overlay img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* Success celebration */
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+        }
+
+        .celebration h2 {
+            font-size: 4em;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            animation: fadeInScale 1s ease;
+        }
+
+        .celebration .hearts-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .falling-heart {
+            position: absolute;
+            font-size: 2em;
+            animation: fall 3s linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <div class="heart">💖</div>
+        <h1>Czy zostaniesz moją walentynką?</h1>
+        <div class="buttons">
+            <button class="btn-yes" onclick="handleYes()">TAK</button>
+            <button class="btn-no" onclick="handleNo()">NIE</button>
+        </div>
+    </div>
+
+    <!-- Fullscreen overlay for "NO" response -->
+    <div class="fullscreen-overlay" id="noOverlay">
+        <img src="You_Are_An_Idiot_screen.gif">
+    </div>
+
+    <!-- Audio element (hidden) -->
+    <audio id="audioPlayer" loop>
+        <source src="muza.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Celebration overlay for "YES" response -->
+    <div class="celebration" id="yesOverlay">
+        <div class="hearts-container" id="heartsContainer"></div>
+        <h2>🎉 Kocham Cię 💕</h2>
+        <h2 style="font-size: 2.5em; margin-top: 20px;"> Do jutra ❤️</h2>
+    </div>
+
+    <script>
+        const audio = document.getElementById('audioPlayer');
+
+        function handleNo() {
+            document.getElementById('noOverlay').style.display = 'flex';
+            // Play music when NO is clicked
+            audio.play().catch(e => console.log('Audio autoplay blocked:', e));
+        }
+
+        function handleYes() {
+            const overlay = document.getElementById('yesOverlay');
+            const container = document.getElementById('heartsContainer');
+            
+            overlay.style.display = 'flex';
+            
+            // Create falling hearts
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    createFallingHeart(container);
+                }, i * 100);
+            }
+            
+            // Continue creating hearts
+            setInterval(() => {
+                createFallingHeart(container);
+            }, 300);
+        }
+
+        function createFallingHeart(container) {
+            const heart = document.createElement('div');
+            heart.className = 'falling-heart';
+            heart.textContent = ['❤️', '💕', '💖', '💗', '💓', '💝'][Math.floor(Math.random() * 6)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+            
+            container.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+
+        // Click anywhere on overlays to close them and stop music
+        document.getElementById('noOverlay').addEventListener('click', function() {
+            this.style.display = 'none';
+            audio.pause();
+            audio.currentTime = 0;
+        });
+        
+        document.getElementById('yesOverlay').addEventListener('click', function() {
+            this.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
